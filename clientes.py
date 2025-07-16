@@ -1,36 +1,32 @@
+class Cliente:
+    def __init__(self, nome, cpf):
+        self.nome = nome
+        self.cpf = cpf
+
 clientes = []
-contas = []
-numero_conta = 1001
 
-def criar_cliente(nome, cpf):
-    for cliente in clientes:
-        if cliente['cpf'] == cpf:
-            print("Cliente já cadastrado.")
-            return None
-    novo_cliente = {
-        'nome': nome,
-        'cpf': cpf,
-    }
-    clientes.append(novo_cliente)
-    return novo_cliente
-
-def buscar_cliente(cpf):
-    for cliente in clientes:
-        if cliente['cpf'] == cpf:
-            return cliente
-    return None
-
-def criar_conta(cliente):
-    global numero_conta
-    conta = {
-        'numero': numero_conta,
-        'cliente': cliente,
-        'saldo': 0.0,
-        'extrato': []
-    }
-    contas.append(conta)
-    numero_conta += 1
-    return conta
+def criar_cliente():
+    print("\n--- Novo Cliente ---")
+    nome = input("Nome: ").strip()
+    cpf = input("CPF: ").strip()
+    for c in clientes:
+        if c.cpf == cpf:
+            print("Cliente já cadastrado com este CPF.")
+            return
+    cliente = Cliente(nome, cpf)
+    clientes.append(cliente)
+    print(f"Cliente {nome} cadastrado com sucesso.")
 
 def listar_clientes():
-    return clientes
+    print("\n--- Clientes Cadastrados ---")
+    if not clientes:
+        print("Nenhum cliente cadastrado.")
+        return
+    for c in clientes:
+        print(f"Nome: {c.nome} | CPF: {c.cpf}")
+
+def buscar_cliente(cpf):
+    for c in clientes:
+        if c.cpf == cpf:
+            return c
+    return None

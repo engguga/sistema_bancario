@@ -1,41 +1,57 @@
-LIMITE_SAQUES = 3
-LIMITE_VALOR_SAQUE = 500
+from contas import buscar_conta
 
-def depositar(conta):
-    valor = float(input("Informe o valor do depósito: "))
-    if valor <= 0:
+def depositar():
+    print("\n--- Depósito ---")
+    numero = input("Número da conta: ").strip()
+    conta = buscar_conta(numero)
+    if not conta:
+        print("Conta não encontrada.")
+        return
+    try:
+        valor = float(input("Valor a depositar: "))
+        if valor <= 0:
+            print("Valor deve ser positivo.")
+            return
+    except ValueError:
         print("Valor inválido.")
         return
-    conta["saldo"] += valor
-    conta["extrato"].append(f"Depósito: R$ {valor:.2f}")
-    print("Depósito realizado com sucesso.")
+    conta.saldo += valor
+    conta.extrato.append(f"Depósito: +R$ {valor:.2f}")
+    print(f"Depósito de R$ {valor:.2f} realizado com sucesso.")
 
-def sacar(conta):
-    if conta["saques_realizados"] >= LIMITE_SAQUES:
-        print("Limite diário de saques atingido.")
+def sacar():
+    print("\n--- Saque ---")
+    numero = input("Número da conta: ").strip()
+    conta = buscar_conta(numero)
+    if not conta:
+        print("Conta não encontrada.")
         return
-
-    valor = float(input("Informe o valor do saque: "))
-    if valor <= 0:
+    try:
+        valor = float(input("Valor a sacar: "))
+        if valor <= 0:
+            print("Valor deve ser positivo.")
+            return
+    except ValueError:
         print("Valor inválido.")
         return
-    if valor > conta["saldo"]:
+    if conta.saldo < valor:
         print("Saldo insuficiente.")
         return
-    if valor > LIMITE_VALOR_SAQUE:
-        print("O valor excede o limite por saque.")
+    conta.saldo -= valor
+    conta.extrato.append(f"Saque: -R$ {valor:.2f}")
+    print(f"Saque de R$ {valor:.2f} realizado com sucesso.")
+
+def extrato():
+    print("\n--- Extrato ---")
+    numero = input("Número da conta: ").strip()
+    conta = buscar_conta(numero)
+    if not conta:
+        print("Conta não encontrada.")
         return
-
-    conta["saldo"] -= valor
-    conta["extrato"].append(f"Saque: R$ {valor:.2f}")
-    conta["saques_realizados"] += 1
-    print("Saque realizado com sucesso.")
-
-def exibir_extrato(conta):
-    print("\n=== Extrato ===")
-    if not conta["extrato"]:
-        print("Não foram realizadas movimentações.")
+    print(f"Extrato da conta {conta.numero} - Cliente: {conta.cliente.nome}")
+    if not conta.extrato:
+        print("Nenhuma movimentação.")
     else:
-        for movimento in conta["extrato"]:
-            print(movimento)
-    print(f"\nSaldo atual: R$ {conta['saldo']:.2f}")
+        for registro in conta.extrato:
+            print(registro)
+    print(f"Saldo atual: R$ {conta.saldo:.2f}")

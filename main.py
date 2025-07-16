@@ -17,7 +17,6 @@ def criar_cliente():
     print("\n--- Novo Cliente ---")
     nome = input("Nome: ").strip()
     cpf = input("CPF: ").strip()
-    # Verificar se já existe cliente com CPF
     for c in clientes:
         if c.cpf == cpf:
             print("Cliente já cadastrado com este CPF.")
